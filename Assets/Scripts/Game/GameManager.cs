@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private bool upgradeReady = false;
 
     [field: SerializeField] public InputProvider inputProvider { get; private set; }
+    [field: SerializeField] public FishSpawner FishSpawner { get; private set; }
 
     public static GameManager instance;
 

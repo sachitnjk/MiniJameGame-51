@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 225d68fca713bb74c8284c80a04c4f9e, type: 3}
+  m_Name: FishTypeComposite
+  m_EditorClassIdentifier: Assembly-CSharp::FishTypeSOComposite
+  fishTypeSOList:
+  - {fileID: 11400000, guid: 59f54be011cbe4840b7578516b24d908, type: 2}
+  - {fileID: 11400000, guid: eb0bcdede21a4f247907b592756a78f4, type: 2}
+  - {fileID: 11400000, guid: 9648be0b99b14354a87c8dd69b6f1cec, type: 2}
+  fishVisualSOList:
+  - {fileID: 11400000, guid: a45689882ff00044eafff8085b54965a, type: 2}
+  - {fileID: 11400000, guid: 690b4335204274c44ac1d6dfbf178eea, type: 2}
+  - {fileID: 11400000, guid: 2d7401de97dd3ad4dae40492c6f5b748, type: 2}

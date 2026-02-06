@@ -13,13 +13,15 @@ public class PlayerManager : MonoBehaviour
     private int leftClickChainCount = 0;
     private float lastLeftClickTime = 0f;
 
+    private FishSpawner fishSpawner;
     private GameManager gameManager;
     private InputAction leftClickAction;
     private InputAction rightClickAction;
 
-	private void OnEnable()
+	private void Start()
 	{
         gameManager = GameManager.instance;
+        fishSpawner = gameManager.FishSpawner;
 
         PlayerInput playerInput = gameManager.inputProvider.GetPlayerInput();
 
@@ -68,7 +70,9 @@ public class PlayerManager : MonoBehaviour
     {
         if (chainCount == 3)
         {
-            //Spawn fish
+            //Spawn fish - WIP
+            //fishSpawner.SpawnFish();
+
             gameManager.RollForXP();
         }
     }
