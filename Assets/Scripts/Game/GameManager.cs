@@ -12,7 +12,25 @@ public class GameManager : MonoBehaviour
 
     private bool upgradeReady = false;
 
-    public void RollForXP()
+    [field: SerializeField] public InputProvider inputProvider { get; private set; }
+
+    public static GameManager instance;
+
+	private void Awake()
+	{
+		if(instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+	}
+
+    //Exp
+
+	public void RollForXP()
     {
         float roll = Random.value;
 
@@ -23,6 +41,8 @@ public class GameManager : MonoBehaviour
             Debug.Log($"{xpGain} EXP Gained. Current Player EXP: {playerXP}");
         }
     }
+
+    //Interactions
 
     void CheckThreshold()
     {
@@ -42,31 +62,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UseUpgrade()
-    {
-        if (!upgradeReady)
-            return;
 
-        Upgrade();
-        upgradeReady = false;
-        playerXP = 0f;
-    }
+	#region Upgrades related
+        public void UseUpgrade()
+        {
+            if (!upgradeReady)
+                return;
 
-    void Upgrade()
-    {
-        xpGain *= 2f;
-        Debug.Log("XP Upgrade Activated");
-    }
+            Upgrade();
+            upgradeReady = false;
+            playerXP = 0f;
+        }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+        void Upgrade()
+        {
+            xpGain *= 2f;
+            Debug.Log("XP Upgrade Activated");
+        }
+	#endregion
 }
