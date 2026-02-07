@@ -3,19 +3,24 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public float spawnRate = 0.5f;
+    [field: SerializeField] public float consumeRadius { get; private set; }
 
+    [Header("XP related")]
     public float playerXP = 0f;
     public float xpGain = 0.1f;
-
     public float currentXPThreshold = 1f;
     public float maxThreshold = 100f;
 
-    private bool upgradeReady = false;
 
+    [Header("Object Refs")]
     [field: SerializeField] public InputProvider inputProvider { get; private set; }
     [field: SerializeField] public FishSpawner FishSpawner { get; private set; }
 
+    public Transform registeredMainSpeakerTransform { get; private set; }
+
     public static GameManager instance;
+
+    private bool upgradeReady = false;
 
 	private void Awake()
 	{
@@ -63,9 +68,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void RegisterSpeakerTransform(Transform speakerTransform)
+    {
+		registeredMainSpeakerTransform = speakerTransform;
+	}
 
 	#region Upgrades related
-        public void UseUpgrade()
+		public void UseUpgrade()
         {
             if (!upgradeReady)
                 return;

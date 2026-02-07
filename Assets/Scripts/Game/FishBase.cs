@@ -9,19 +9,22 @@ public class FishBase : MonoBehaviour
 	private GameObject instantiatedFishVisual;
 	private Transform targetTransform;
 
-	private Vector3 lerpStart;
-	private Vector3 lerpEnd;
-	private float lerpTime;
-	private float lerpDuration = 20f;
+	[SerializeField] private float moveSpeed = 2f;
 
 	private void Update()
 	{
-		if(lerpTime < lerpDuration)
-		{
-			lerpTime += Time.deltaTime;
-			float t = lerpTime/lerpDuration;
+		Vector2 currentPos = transform.position;
+		Vector2 targetPos = targetTransform.position;
 
-			transform.position = Vector3.Lerp(lerpStart, lerpEnd, t);
+		Vector2 newPos = Vector2.MoveTowards(currentPos, targetPos, moveSpeed * Time.deltaTime);
+		transform.position = new Vector3(newPos.x, newPos.y, transform.position.z);
+
+		float distanceToTarget = Vector2.Distance(newPos, targetPos);
+		if (distanceToTarget <= GameManager.instance.consumeRadius)
+		{
+			GameManager.instance.RollForXP();
+
+			DespawnCurrentFish();
 		}
 	}
 
@@ -37,24 +40,12 @@ public class FishBase : MonoBehaviour
 		}
 
 		targetTransform = target;
-		CalculateRandomTrajectory();
 	}
 
-	private void CalculateRandomTrajectory()
+	private void DespawnCurrentFish()
 	{
-		Vector3 currentPos = this.gameObject.transform.position;
-		Vector3 targetPos = targetTransform.position;
+		//trigger vfx;
 
-		Vector3 direction = (targetPos - currentPos).normalized;
-		float distanceToTarget = Vector3.Distance(currentPos, targetPos);
-		float travelDistance = distanceToTarget * Random.Range(0.5f, 0.8f);
-
-		lerpStart = currentPos;
-		lerpEnd = currentPos + direction * travelDistance;
-
-		Vector3 sideOffset = Random.insideUnitSphere * 2f;
-		lerpEnd += sideOffset;
-
-		lerpTime = 0f;
+		Destroy(this.gameObject);
 	}
 }

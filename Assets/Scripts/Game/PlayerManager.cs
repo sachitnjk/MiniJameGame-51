@@ -6,6 +6,7 @@ public class PlayerManager : MonoBehaviour
     public float multiClickThreshold = 0.3f;
     public int maxChain = 5;
 
+    [SerializeField] private Transform speakerTransform;
 
     private int totalLeftClicks = 0;
     private int totalRightClicks = 0;
@@ -33,6 +34,8 @@ public class PlayerManager : MonoBehaviour
 
         leftClickAction.Enable();
         rightClickAction.Enable();
+
+        gameManager.RegisterSpeakerTransform(speakerTransform);
 	}
 
 	private void OnDisable()
@@ -71,9 +74,10 @@ public class PlayerManager : MonoBehaviour
         if (chainCount == 3)
         {
             //Spawn fish - WIP
-            //fishSpawner.SpawnFish();
+            fishSpawner.SpawnFish();
 
-            gameManager.RollForXP();
+            //Moved XP to on fish reach destination 
+            //gameManager.RollForXP();
         }
     }
 
