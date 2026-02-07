@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class FishBase : MonoBehaviour
@@ -38,16 +39,21 @@ public class FishBase : MonoBehaviour
 		{
 			instantiatedFishVisual = Instantiate(fishVisualPrefab, transform);
 
-			bool isOnRightSide = transform.position.x > target.position.x;
-			if(isOnRightSide)
+			//Sprite flip
+			SpriteRenderer spriteRenderer = instantiatedFishVisual.GetComponentInChildren<SpriteRenderer>();
+			if(spriteRenderer != null)
 			{
-				SpriteRenderer spriteRenderer = instantiatedFishVisual.GetComponentInChildren<SpriteRenderer>();
-				if(spriteRenderer != null)
-				{
-					spriteRenderer.flipX = true;
-				}
+				//flipY since flipping of x is handle by the roation logic below
+				spriteRenderer.flipY = transform.position.x > target.position.x;
 			}
+
+			//Fish visual onject rotate towars target
+			Vector2 direction = (target.position - transform.position).normalized;
+			float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+			instantiatedFishVisual.transform.rotation = Quaternion.Euler(0f, 0f, angle);
 		}
+
+
 
 		targetTransform = target;
 	}
