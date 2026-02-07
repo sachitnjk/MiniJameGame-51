@@ -37,6 +37,16 @@ public class FishBase : MonoBehaviour
 		if(fishVisualPrefab != null)
 		{
 			instantiatedFishVisual = Instantiate(fishVisualPrefab, transform);
+
+			bool isOnRightSide = transform.position.x > target.position.x;
+			if(isOnRightSide)
+			{
+				SpriteRenderer spriteRenderer = instantiatedFishVisual.GetComponentInChildren<SpriteRenderer>();
+				if(spriteRenderer != null)
+				{
+					spriteRenderer.flipX = true;
+				}
+			}
 		}
 
 		targetTransform = target;
