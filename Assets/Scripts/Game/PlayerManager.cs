@@ -19,8 +19,8 @@ public class PlayerManager : MonoBehaviour
     private InputAction leftClickAction;
     private InputAction rightClickAction;
 
-	private void Start()
-	{
+    private void Start()
+    {
         gameManager = GameManager.instance;
         fishSpawner = gameManager.FishSpawner;
 
@@ -36,54 +36,48 @@ public class PlayerManager : MonoBehaviour
         rightClickAction.Enable();
 
         gameManager.RegisterSpeakerTransform(speakerTransform);
-	}
+    }
 
-	private void OnDisable()
-	{
-		leftClickAction.performed -= HandleLeftClick;
-		rightClickAction.performed -= HandleRightClick;
-	}
+    private void OnDisable()
+    {
+        leftClickAction.performed -= HandleLeftClick;
+        rightClickAction.performed -= HandleRightClick;
+    }
 
     void HandleLeftClick(InputAction.CallbackContext ctx)
     {
-        totalLeftClicks++;
+        int multiplier = gameManager.clickMultiplier;
 
-        if (Time.time - lastLeftClickTime <= multiClickThreshold)
-            leftClickChainCount++;
-        else
-            leftClickChainCount = 1;
-
-        lastLeftClickTime = Time.time;
-
-        ProcessLeftClickChain(leftClickChainCount);
-
-        if (leftClickChainCount >= maxChain)
+        for (int i = 0; i < multiplier; i++)
         {
-            leftClickChainCount = 0;
+            totalLeftClicks++;
+
+            if (Time.time - lastLeftClickTime <= multiClickThreshold)
+                leftClickChainCount++;
+            else
+                leftClickChainCount = 1;
+
+            lastLeftClickTime = Time.time;
+
+            ProcessLeftClickChain(leftClickChainCount);
+
+            if (leftClickChainCount >= maxChain)
+                leftClickChainCount = 0;
         }
     }
 
     void HandleRightClick(InputAction.CallbackContext ctx)
     {
         totalRightClicks++;
-        OnRightClick();
+        gameManager.UseUpgrade();
     }
 
     void ProcessLeftClickChain(int chainCount)
     {
         if (chainCount == 3)
         {
-            //Spawn fish - WIP
             fishSpawner.TrySpawnFish(GameManager.instance.trashSpawnRate);
-
-            //Moved XP to on fish reach destination - refer FishBase script
-            //gameManager.RollForXP();
         }
-    }
-
-    void OnRightClick()
-    {
-        gameManager.UseUpgrade();
     }
 
     public int GetTotalLeftClicks() => totalLeftClicks;
