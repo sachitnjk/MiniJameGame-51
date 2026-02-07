@@ -4,25 +4,46 @@ using UnityEngine;
 public class FishSpawner : MonoBehaviour
 {
 	[SerializeField] private FishTypeSOComposite fishTypeComposite;
+	[SerializeField] private FishTypeSOComposite trashTypeComposite;
 	[SerializeField] private GameObject blankFishPrefab;
-	
+	[SerializeField] private GameObject trashFishPrefab;
+
+	private GameObject prefabToSpawn;
+	private FishTypeSO currentFishTypeToSpawn;
+	private FishVisualSO currentFishVisualToSpawn;
+	private FishTypeSOComposite currentCompositeToUse;
+
 	private Transform targetTransform;
 
-	public void SpawnFish()
+	public void TrySpawnFish(float trashSpawnRate)
 	{
 		if(targetTransform == null)
 		{
 			targetTransform = GameManager.instance.registeredMainSpeakerTransform;
 		}
 
-		int typeIndex = Random.Range(0, fishTypeComposite.fishTypeSOList.Count);
-		int visualIndex = Random.Range(0, fishTypeComposite.fishVisualSOList.Count);
+		float trashSpawnIndex = Random.Range(0f, 1f);
+		if(trashSpawnIndex < trashSpawnRate)
+		{
+			prefabToSpawn = trashFishPrefab;
 
-		FishTypeSO currentFishTypeToSpawn = fishTypeComposite.fishTypeSOList[typeIndex];
-		FishVisualSO currentFishVisualToSpawn = fishTypeComposite.fishVisualSOList[visualIndex];
+			currentCompositeToUse = trashTypeComposite;
+		}
+		else
+		{
+			prefabToSpawn = blankFishPrefab;
+
+			currentCompositeToUse = fishTypeComposite;
+		}
+
+		int typeIndex = Random.Range(0, currentCompositeToUse.fishTypeSOList.Count);
+		int visualIndex = Random.Range(0, currentCompositeToUse.fishVisualSOList.Count);
+
+		currentFishTypeToSpawn = currentCompositeToUse.fishTypeSOList[typeIndex];
+		currentFishVisualToSpawn = currentCompositeToUse.fishVisualSOList[visualIndex];
 
 		Vector2 spawnPos = GetSpawnPosition();
-		GameObject spawnedFish = Instantiate(blankFishPrefab, spawnPos, Quaternion.identity);
+		GameObject spawnedFish = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
 		if(spawnedFish != null)
 		{
 			FishBase fishBase = spawnedFish.GetComponent<FishBase>();

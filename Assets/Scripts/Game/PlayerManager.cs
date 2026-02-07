@@ -74,9 +74,9 @@ public class PlayerManager : MonoBehaviour
         if (chainCount == 3)
         {
             //Spawn fish - WIP
-            fishSpawner.SpawnFish();
+            fishSpawner.TrySpawnFish(GameManager.instance.trashSpawnRate);
 
-            //Moved XP to on fish reach destination 
+            //Moved XP to on fish reach destination - refer FishBase script
             //gameManager.RollForXP();
         }
     }

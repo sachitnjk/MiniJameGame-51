@@ -3,6 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public float spawnRate = 0.5f;
+    public float trashSpawnRate = 0.5f;
     [field: SerializeField] public float consumeRadius { get; private set; }
 
     [Header("XP related")]
@@ -46,6 +47,11 @@ public class GameManager : MonoBehaviour
             CheckThreshold();
             Debug.Log($"{xpGain} EXP Gained. Current Player EXP: {playerXP}");
         }
+    }
+
+    public void AddToTrash()
+    {
+        //functionality WIP
     }
 
     //Interactions

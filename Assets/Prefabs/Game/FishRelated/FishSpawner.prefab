@@ -46,8 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishSpawner
   fishTypeComposite: {fileID: 11400000, guid: 4793f585d5d8141449c437ed1787a4f0, type: 2}
+  trashTypeComposite: {fileID: 11400000, guid: f72cba3fde1c30c418fee888e209b392, type: 2}
   blankFishPrefab: {fileID: 1230519252989087656, guid: 35cef97bb76f08643b28fa80b194ed87, type: 3}
-  targetTransform: {fileID: 8378883513840001258}
+  trashFishPrefab: {fileID: 1230519252989087656, guid: 779544ac10f3fd74ba987053304324ef, type: 3}
 --- !u!1 &8284860334361374984
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ public class FishBase : MonoBehaviour
 
 	[SerializeField] private float moveSpeed = 2f;
 
+	public bool isTrash;
+
 	private void Update()
 	{
 		Vector2 currentPos = transform.position;
@@ -23,7 +25,15 @@ public class FishBase : MonoBehaviour
 		float distanceToTarget = Vector2.Distance(newPos, targetPos);
 		if (distanceToTarget <= GameManager.instance.consumeRadius)
 		{
-			GameManager.instance.RollForXP();
+			if(!isTrash)
+			{
+				GameManager.instance.RollForXP();
+			}
+			else
+			{
+				//Still WIP
+				GameManager.instance.AddToTrash();
+			}
 
 			DespawnCurrentFish();
 		}
