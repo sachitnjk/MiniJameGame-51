@@ -6,22 +6,36 @@ using System.Linq;
 
 public enum UpgradeType
 {
-    XPGain,
-    SpawnRate,
-    InstantXP,
-    ClickMultiplier
+    // Tier 1
+    BetterFish,
+    LessTrash,
+    FasterSpeaker,
+
+    // Tier 2
+    PremiumFish,
+    CleanerWaters,
+    CastNet,
+    BiggerNet,
+
+    // Tier 3
+    MinionSpeaker,
+    MinionFishQuality
 }
 
-public class Upgrade
+[System.Serializable]
+public class UpgradeDefinition
 {
     public UpgradeType type;
     public int tier;
-    public int multiplier = 1;
+    public string displayName;
+    public string description;
 
-    public Upgrade(UpgradeType type, int tier)
+    public UpgradeDefinition(UpgradeType type, int tier, string displayName, string description)
     {
         this.type = type;
         this.tier = tier;
+        this.displayName = displayName;
+        this.description = description;
     }
 }
 
@@ -29,22 +43,32 @@ public class Upgrade
 
 public class GameManager : MonoBehaviour
 {
-    public float spawnRate = 0.5f;
-    public float trashSpawnRate = 0.5f;
+    [Header("Spawn Settings")]
+    public int clicksRequiredForSpawn = 6;
+    private int currentClickCount = 0;
+    public float fishWeight = 0.3f;
+
     [field: SerializeField] public float consumeRadius { get; private set; }
 
-    [Header("XP related")]
+    [Header("XP Settings")]
     public float playerXP = 0f;
-    public float xpGain = 0.1f;
-    public float currentXPThreshold = 1f;
-    public float maxThreshold = 100f;
+    public float xpPerFish = 1f;
 
-    public int clickMultiplier = 1;
+    [Header("Tier Thresholds")]
+    private int currentTier = 1;
+    private float[] tierThresholds = { 0f, 10f, 30f, 60f };
 
-    private int thresholdsBanked = 0;
+    [Header("Minion Speakers")]
+    private int minionCount = 0;
+    private const int MAX_MINIONS = 3;
+    public float minionXPBonus = 0f;
+    [SerializeField] private GameObject minionSpeakerPrefab;
 
-    private Dictionary<UpgradeType, Upgrade> activeUpgrades = new Dictionary<UpgradeType, Upgrade>();
-    private List<Upgrade> upgradePool;
+    [Header("Net Upgrades")]
+    private int netMultiplier = 5;
+    [Header("Upgrade System")]
+    private List<UpgradeDefinition> allUpgrades = new List<UpgradeDefinition>();
+    private List<UpgradeDefinition> availableUpgrades = new List<UpgradeDefinition>();
 
     [Header("Object Refs")]
     [field: SerializeField] public InputProvider inputProvider { get; private set; }
@@ -65,63 +89,129 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        InitializeUpgradePool();
+        InitializeUpgrades();
     }
 
-    void InitializeUpgradePool()
+    void InitializeUpgrades()
     {
-        upgradePool = new List<Upgrade>
+        allUpgrades = new List<UpgradeDefinition>
         {
-            new Upgrade(UpgradeType.XPGain, 1),
-
-            new Upgrade(UpgradeType.SpawnRate, 2),
-            new Upgrade(UpgradeType.InstantXP, 2),
-
-            new Upgrade(UpgradeType.ClickMultiplier, 3)
+            // Tier 1
+            new UpgradeDefinition(UpgradeType.BetterFish, 1, "Better Fish", "XP per fish +1"),
+            new UpgradeDefinition(UpgradeType.LessTrash, 1, "Less Trash", "Fish weight +5%"),
+            new UpgradeDefinition(UpgradeType.FasterSpeaker, 1, "Faster Speaker", "Clicks needed -1"),
+            
+            // Tier 2
+            new UpgradeDefinition(UpgradeType.PremiumFish, 2, "Premium Fish", "XP per fish +2"),
+            new UpgradeDefinition(UpgradeType.CleanerWaters, 2, "Cleaner Waters", "Fish weight +10%"),
+            new UpgradeDefinition(UpgradeType.CastNet, 2, "Cast Net", "Instant XP boost"),
+            new UpgradeDefinition(UpgradeType.BiggerNet, 2, "Bigger Net", "Net gives more XP"),
+            
+            // Tier 3
+            new UpgradeDefinition(UpgradeType.MinionSpeaker, 3, "Minion Speaker", "Add extra spawn per roll"),
+            new UpgradeDefinition(UpgradeType.MinionFishQuality, 3, "Minion Fish Quality", "Minions grant +1 XP per fish")
         };
 
-        Debug.Log("Upgrade Pool Initialized:");
-        foreach (var u in upgradePool)
-        {
-            Debug.Log($"- Upgrade Type: {u.type}, Tier: {u.tier}");
-        }
+        Debug.Log($"Upgrade System Initialized with {allUpgrades.Count} total upgrades");
     }
 
-    #region EXP
-    public void RollForXP()
+    #region XP & Progression
+    public void AddFishXP()
     {
-        float roll = Random.value;
+        float totalXP = xpPerFish + minionXPBonus;
+        playerXP += totalXP;
 
-        if (roll <= spawnRate)
+        // cap at tier 3 threshold
+        float maxXP = tierThresholds[3];
+        if (playerXP > maxXP)
         {
-            playerXP += xpGain;
-            CheckThreshold();
-            Debug.Log($"{xpGain} EXP Gained. Current Player EXP: {playerXP}");
+            playerXP = maxXP;
         }
+
+        Debug.Log($"+{totalXP} XP gained! Total XP: {playerXP}/{GetCurrentThreshold()}");
+
+        CheckTierProgress();
     }
 
     public void AddToTrash()
     {
-        // WIP
+        // WIP - trash mechanic here
     }
 
-    void CheckThreshold()
+    void CheckTierProgress()
     {
-        while (playerXP >= currentXPThreshold)
+        float currentThreshold = GetCurrentThreshold();
+
+        if (playerXP >= currentThreshold)
         {
-            thresholdsBanked++;
-            playerXP -= currentXPThreshold;
-
-            Debug.Log($"Threshold reached! Thresholds Banked: {thresholdsBanked}");
-
-            if (currentXPThreshold < maxThreshold)
+            // Unlock next tier
+            int nextTier = currentTier + 1;
+            if (nextTier <= 3 && playerXP >= tierThresholds[nextTier])
             {
-                currentXPThreshold *= 2f;
-                if (currentXPThreshold > maxThreshold)
-                    currentXPThreshold = maxThreshold;
+                currentTier = nextTier;
+                Debug.Log($"Unlocked Tier {currentTier}!");
             }
 
-            Debug.Log($"Next XP Threshold set to: {currentXPThreshold}");
+            Debug.Log($"Tier {currentTier} threshold reached! ({currentThreshold} XP)");
+            GenerateUpgradeChoices();
+        }
+    }
+
+    float GetCurrentThreshold()
+    {
+        // clamp tier 1-3
+        int tier = Mathf.Clamp(currentTier, 1, 3);
+        return tierThresholds[tier];
+    }
+
+    void GenerateUpgradeChoices()
+    {
+        availableUpgrades.Clear();
+
+        // get all upgrades for tier
+        var tierUpgrades = allUpgrades.Where(u => u.tier == currentTier).ToList();
+
+        // remove maxed ones
+        tierUpgrades = tierUpgrades.Where(u => !IsUpgradeMaxed(u.type)).ToList();
+
+        if (tierUpgrades.Count == 0)
+        {
+            Debug.LogWarning($"No available upgrades for tier {currentTier}!");
+            return;
+        }
+
+        // show all upgrades for tier
+        availableUpgrades.AddRange(tierUpgrades);
+
+        Debug.Log($"Generated {availableUpgrades.Count} upgrade choices for Tier {currentTier}:");
+        foreach (var upgrade in availableUpgrades)
+        {
+            Debug.Log($"  - {upgrade.displayName}: {upgrade.description}");
+        }
+
+        // tell UI to show menu
+        if (UpgradeSelectionManager.instance != null)
+        {
+            UpgradeSelectionManager.instance.ShowUpgradeSelection(availableUpgrades, currentTier);
+        }
+    }
+
+    bool IsUpgradeMaxed(UpgradeType type)
+    {
+        switch (type)
+        {
+            case UpgradeType.LessTrash:
+            case UpgradeType.CleanerWaters:
+                return fishWeight >= 1f; // 100% fish = no more trash upgrades
+
+            case UpgradeType.MinionSpeaker:
+                return minionCount >= MAX_MINIONS; // 3 minions max
+
+            case UpgradeType.FasterSpeaker:
+                return clicksRequiredForSpawn <= 1; // min 1 click
+
+            default:
+                return false; // stackable forever
         }
     }
 
@@ -132,100 +222,149 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Upgrades
-    public void UseUpgrade()
+    public void SelectUpgrade(int choiceIndex)
     {
-        if (thresholdsBanked <= 0)
+        if (choiceIndex < 0 || choiceIndex >= availableUpgrades.Count)
         {
-            //Debug.Log("UseUpgrade called but no thresholds banked.");
-            UIManager.instance.UI_NotificationManager.Show("UseUpgrade called but no thresholds banked.");
+            Debug.LogError($"Invalid upgrade choice index: {choiceIndex}");
             return;
         }
 
-        int tierToUse = thresholdsBanked;
+        UpgradeDefinition selectedUpgrade = availableUpgrades[choiceIndex];
+        ApplyUpgrade(selectedUpgrade.type);
 
-		UIManager.instance.UI_NotificationManager.Show($"Using Upgrade at Tier {tierToUse}");
-		//Debug.Log($"Using Upgrade at Tier {tierToUse}");
+        availableUpgrades.Clear();
 
-        var possible = upgradePool
-            .Where(u => u.tier == tierToUse)
-            .ToList();
-
-        if (possible.Count == 0)
-        {
-            //Debug.Log($"No upgrades available for Tier {tierToUse}");
-			UIManager.instance.UI_NotificationManager.Show($"No upgrades available for Tier {tierToUse}");
-			thresholdsBanked = 0;
-            playerXP = 0f;
-            return;
-        }
-
-        Upgrade rolled = possible[Random.Range(0, possible.Count)];
-
-        //Debug.Log($"Rolled Upgrade: {rolled.type} (Tier {rolled.tier})");
-		UIManager.instance.UI_NotificationManager.Show($"Rolled Upgrade: {rolled.type} (Tier {rolled.tier})");
-
-		ApplyOrStackUpgrade(rolled.type, rolled.tier);
-
-        thresholdsBanked = 0;
+        // Seset xp AND tier
         playerXP = 0f;
+        currentTier = 1;
 
-		UIManager.instance.UI_NotificationManager.Show("Upgrade consumed. Thresholds reset. Player XP reset.");
-		//Debug.Log("Upgrade consumed. Thresholds reset. Player XP reset.");
+        Debug.Log($"Upgrade applied. XP and Tier reset. Back to Tier 1.");
     }
 
-    void ApplyOrStackUpgrade(UpgradeType type, int tier)
+    void ApplyUpgrade(UpgradeType type)
     {
-        if (activeUpgrades.ContainsKey(type))
+        Debug.Log($"Applying upgrade: {type}");
+
+        switch (type)
         {
-            activeUpgrades[type].multiplier++;
-            //Debug.Log($"Stacking Upgrade: {type} now at Multiplier {activeUpgrades[type].multiplier}");
-			UIManager.instance.UI_NotificationManager.Show($"Stacking Upgrade: {type} now at Multiplier {activeUpgrades[type].multiplier}");
-		}
-        else
-        {
-            activeUpgrades[type] = new Upgrade(type, tier);
-            //Debug.Log($"New Upgrade Applied: {type} at Tier {tier}");
-			UIManager.instance.UI_NotificationManager.Show($"New Upgrade Applied: {type} at Tier {tier}");
-		}
-
-        ApplyUpgradeEffect(activeUpgrades[type]);
-    }
-
-    void ApplyUpgradeEffect(Upgrade upgrade)
-    {
-        //Debug.Log($"Applying Upgrade Effect for {upgrade.type} | Multiplier: {upgrade.multiplier}");
-		UIManager.instance.UI_NotificationManager.Show($"Applying Upgrade Effect for {upgrade.type} | Multiplier: {upgrade.multiplier}");
-
-		switch (upgrade.type)
-        {
-            case UpgradeType.XPGain:
-                float baseXP = currentXPThreshold;
-                xpGain = baseXP * upgrade.multiplier;
-                //Debug.Log($"XP Gain recalculated. Base: {baseXP}, Multiplier: {upgrade.multiplier}, New xpGain: {xpGain}");
-				UIManager.instance.UI_NotificationManager.Show($"XP Gain recalculated. Base: {baseXP}, Multiplier: {upgrade.multiplier}, New xpGain: {xpGain}");
-				break;
-
-            case UpgradeType.SpawnRate:
-                float increase = 0.1f * upgrade.multiplier;
-                spawnRate += increase;
-                //Debug.Log($"Spawn Rate increased by {increase}. New spawnRate: {spawnRate}");
-				UIManager.instance.UI_NotificationManager.Show($"Spawn Rate increased by {increase}. New spawnRate: {spawnRate}");
-				break;
-
-            case UpgradeType.InstantXP:
-                float totalInstant = xpGain * upgrade.multiplier;
-                playerXP += totalInstant;
-                //Debug.Log($"Instant XP triggered. Gained: {totalInstant}, New Player XP: {playerXP}");
-				UIManager.instance.UI_NotificationManager.Show($"Instant XP triggered. Gained: {totalInstant}, New Player XP: {playerXP}");
-				CheckThreshold();
+            // Tier 1
+            case UpgradeType.BetterFish:
+                xpPerFish += 1f;
+                Debug.Log($"XP per fish increased to {xpPerFish}");
                 break;
 
-            case UpgradeType.ClickMultiplier:
-                clickMultiplier = 1 + upgrade.multiplier;
-                //Debug.Log($"Click Multiplier updated. New Click Multiplier: {clickMultiplier}");
-				UIManager.instance.UI_NotificationManager.Show($"Click Multiplier updated. New Click Multiplier: {clickMultiplier}");
-				break;
+            case UpgradeType.LessTrash:
+                fishWeight += 0.05f;
+                fishWeight = Mathf.Min(fishWeight, 1f);
+                Debug.Log($"Fish weight increased to {fishWeight * 100}%");
+                break;
+
+            // Tier 2
+            case UpgradeType.PremiumFish:
+                xpPerFish += 2f;
+                Debug.Log($"XP per fish increased to {xpPerFish}");
+                break;
+
+            case UpgradeType.CleanerWaters:
+                fishWeight += 0.10f;
+                fishWeight = Mathf.Min(fishWeight, 1f);
+                Debug.Log($"Fish weight increased to {fishWeight * 100}%");
+                break;
+
+            case UpgradeType.CastNet:
+                float netXP = xpPerFish * netMultiplier;
+                playerXP += netXP;
+                Debug.Log($"Cast Net! Gained {netXP} instant XP");
+                CheckTierProgress();
+                break;
+
+            case UpgradeType.BiggerNet:
+                netMultiplier += 2;
+                Debug.Log($"Net multiplier increased to {netMultiplier}x");
+                break;
+
+            case UpgradeType.FasterSpeaker:
+                clicksRequiredForSpawn = Mathf.Max(1, clicksRequiredForSpawn - 1);
+                Debug.Log($"Clicks required reduced to {clicksRequiredForSpawn}");
+                break;
+
+            // Tier 3
+            case UpgradeType.MinionSpeaker:
+                if (minionCount < MAX_MINIONS)
+                {
+                    minionCount++;
+
+                    // Spawn minion speaker prefab
+                    if (minionSpeakerPrefab != null && registeredMainSpeakerTransform != null)
+                    {
+                        Vector3 spawnOffset = new Vector3(Random.Range(-2f, 2f), Random.Range(-2f, 2f), 0f);
+                        Instantiate(minionSpeakerPrefab, registeredMainSpeakerTransform.position + spawnOffset, Quaternion.identity);
+                    }
+
+                    Debug.Log($"Minion speaker added! Total minions: {minionCount}");
+                }
+                break;
+
+            case UpgradeType.MinionFishQuality:
+                minionXPBonus += 1f;
+                Debug.Log($"Minion XP bonus increased to +{minionXPBonus} per fish");
+                break;
         }
     }
+
+    #endregion
+
+    #region Click & Spawn Logic
+
+    public void ProcessClick()
+    {
+        currentClickCount++;
+
+        if (currentClickCount >= clicksRequiredForSpawn)
+        {
+            currentClickCount = 0;
+
+            RollForSpawn("Main Speaker");
+
+            // Minion spawns
+            for (int i = 0; i < minionCount; i++)
+            {
+                RollForSpawn($"Minion {i + 1}");
+            }
+        }
+        else
+        {
+            Debug.Log($"Click accumulated ({currentClickCount}/{clicksRequiredForSpawn})");
+        }
+    }
+
+    void RollForSpawn(string source)
+    {
+        float fishRoll = Random.value;
+        bool isFish = fishRoll <= fishWeight;
+
+        if (isFish)
+        {
+            FishSpawner.SpawnFish(false);
+            Debug.Log($"[{source}] Fish spawned!");
+        }
+        else
+        {
+            FishSpawner.SpawnFish(true);
+            Debug.Log($"[{source}] Trash spawned!");
+        }
+    }
+
+    #endregion
+
+    #region Public Getters (for UI)
+
+    public int GetCurrentTier() => currentTier;
+    public float GetProgressToNextTier() => playerXP / GetCurrentThreshold();
+    public List<UpgradeDefinition> GetAvailableUpgrades() => availableUpgrades;
+    public int GetMinionCount() => minionCount;
+    public bool HasAvailableUpgrades() => availableUpgrades.Count > 0;
+
     #endregion
 }

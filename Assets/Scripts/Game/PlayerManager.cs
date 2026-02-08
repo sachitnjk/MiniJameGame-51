@@ -3,18 +3,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
-    public float multiClickThreshold = 0.3f;
-    public int maxChain = 5;
-
     [SerializeField] private Transform speakerTransform;
 
     private int totalLeftClicks = 0;
     private int totalRightClicks = 0;
 
-    private int leftClickChainCount = 0;
-    private float lastLeftClickTime = 0f;
-
-    private FishSpawner fishSpawner;
     private GameManager gameManager;
     private InputAction leftClickAction;
     private InputAction rightClickAction;
@@ -22,7 +15,6 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.instance;
-        fishSpawner = gameManager.FishSpawner;
 
         PlayerInput playerInput = gameManager.inputProvider.GetPlayerInput();
 
@@ -46,38 +38,25 @@ public class PlayerManager : MonoBehaviour
 
     void HandleLeftClick(InputAction.CallbackContext ctx)
     {
-        int multiplier = gameManager.clickMultiplier;
+        totalLeftClicks++;
 
-        for (int i = 0; i < multiplier; i++)
-        {
-            totalLeftClicks++;
+        // Process click through GameManager's spawn system
+        gameManager.ProcessClick();
 
-            if (Time.time - lastLeftClickTime <= multiClickThreshold)
-                leftClickChainCount++;
-            else
-                leftClickChainCount = 1;
-
-            lastLeftClickTime = Time.time;
-
-            ProcessLeftClickChain(leftClickChainCount);
-
-            if (leftClickChainCount >= maxChain)
-                leftClickChainCount = 0;
-        }
+        Debug.Log($"Click #{totalLeftClicks} processed");
     }
 
     void HandleRightClick(InputAction.CallbackContext ctx)
     {
         totalRightClicks++;
-        gameManager.UseUpgrade();
-    }
 
-    void ProcessLeftClickChain(int chainCount)
-    {
-        if (chainCount == 3)
+        // Toggle upgrade menu
+        if (UpgradeSelectionManager.instance != null)
         {
-            fishSpawner.TrySpawnFish(GameManager.instance.trashSpawnRate);
+            UpgradeSelectionManager.instance.ToggleMenu();
         }
+
+        Debug.Log($"Right-click #{totalRightClicks} - toggling upgrade menu");
     }
 
     public int GetTotalLeftClicks() => totalLeftClicks;
