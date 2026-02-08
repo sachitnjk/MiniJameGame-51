@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] private Transform speakerTransform;
+    [SerializeField] private GameObject clickBubblePrefab;
 
     private int totalLeftClicks = 0;
     private int totalRightClicks = 0;
@@ -39,6 +40,8 @@ public class PlayerManager : MonoBehaviour
     void HandleLeftClick(InputAction.CallbackContext ctx)
     {
         totalLeftClicks++;
+
+        SpawnClickBubbles(ctx);
         SoundManager.instance?.PlayClickSFX();
         
         // Process click through GameManager's spawn system
@@ -47,6 +50,28 @@ public class PlayerManager : MonoBehaviour
 
         Debug.Log($"Click #{totalLeftClicks} processed");
     }
+
+    private void SpawnClickBubbles(InputAction.CallbackContext ctx)
+    {
+		Vector2 screenPos = Mouse.current.position.ReadValue();
+
+		Vector3 screenPos3D = new Vector3(screenPos.x, screenPos.y, -Camera.main.transform.position.z);
+		Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos3D);
+		worldPos.z = 0f;
+
+		int count = Random.Range(2, 4);
+
+		for (int i = 0; i < count; i++)
+		{
+			Vector3 offset = new Vector3(
+				Random.Range(-0.15f, 0.15f),
+				Random.Range(-0.15f, 0.15f),
+				0f);
+
+			GameObject instantiatedBubble = Instantiate(clickBubblePrefab, worldPos, Quaternion.identity);
+			instantiatedBubble.GetComponent<BubbleFloat>().Init();
+		}
+	}
 
     bool ClickedOnTrash()
     {
