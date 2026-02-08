@@ -69,6 +69,7 @@ public class UpgradeSelectionManager : MonoBehaviour
         else
         {
             Debug.Log("No upgrades available yet. Reach a tier threshold first!");
+            UIManager.instance.UI_NotificationManager.Show($"No available upgrades for current tier!");
         }
     }
 
