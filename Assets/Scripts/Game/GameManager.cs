@@ -74,6 +74,11 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public InputProvider inputProvider { get; private set; }
     [field: SerializeField] public FishSpawner FishSpawner { get; private set; }
 
+    [Header("Trash Meter")]
+    [SerializeField] private float trashMeterThreshold = 5f;
+    [SerializeField] private float trashMeterPerClick = 1f;
+    private float currentTrashMeter = 0f;
+
     public Transform registeredMainSpeakerTransform { get; private set; }
 
     public static GameManager instance;
@@ -354,6 +359,33 @@ public class GameManager : MonoBehaviour
             FishSpawner.SpawnFish(true);
             Debug.Log($"[{source}] Trash spawned!");
         }
+    }
+
+    #endregion
+
+    #region Trash
+    public void ProcessTrashClick()
+    {
+        currentTrashMeter += trashMeterPerClick;
+
+        if (currentTrashMeter >= trashMeterThreshold)
+        {
+            currentTrashMeter = 0f;
+            TriggerTrashReward();
+        }
+    }
+
+    void TriggerTrashReward()
+    {
+        Debug.Log("Trash meter full! Spawning 2 guaranteed fish.");
+
+        FishSpawner.SpawnFish(false);
+        FishSpawner.SpawnFish(false);
+    }
+
+    public float GetTrashMeterFill()
+    {
+        return currentTrashMeter / trashMeterThreshold;
     }
 
     #endregion

@@ -42,10 +42,31 @@ public class PlayerManager : MonoBehaviour
         SoundManager.instance?.PlayClickSFX();
         
         // Process click through GameManager's spawn system
-        gameManager.ProcessClick();
+        if (!ClickedOnTrash())
+            gameManager.ProcessClick();
 
         Debug.Log($"Click #{totalLeftClicks} processed");
     }
+
+    bool ClickedOnTrash()
+    {
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Vector2 worldPos = Camera.main.ScreenToWorldPoint(mousePos);
+
+        RaycastHit2D hit = Physics2D.Raycast(worldPos, Vector2.zero);
+
+        if (hit.collider != null)
+        {
+            FishBase fish = hit.collider.GetComponent<FishBase>();
+            if (fish != null && fish.isTrash)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     void HandleRightClick(InputAction.CallbackContext ctx)
     {

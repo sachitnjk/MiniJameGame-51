@@ -71,4 +71,13 @@ public class FishBase : MonoBehaviour
 		SoundManager.instance?.PlayFishDeathSFX();
         Destroy(this.gameObject);
     }
+
+    private void OnMouseDown()
+    {
+        if (!isTrash) return;
+
+        GameManager.instance.ProcessTrashClick();
+        DespawnCurrentFish();
+    }
+
 }

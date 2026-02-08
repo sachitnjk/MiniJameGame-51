@@ -86,6 +86,8 @@ MonoBehaviour:
   minionSpeakerPrefab: {fileID: 5917467298858511234, guid: 2a4d9f93d1a86a442947457e4e737e6d, type: 3}
   <inputProvider>k__BackingField: {fileID: 2339009742134612868}
   <FishSpawner>k__BackingField: {fileID: 8239661374005675648}
+  trashMeterThreshold: 15
+  trashMeterPerClick: 1
 --- !u!114 &2339009742134612868
 MonoBehaviour:
   m_ObjectHideFlags: 0
