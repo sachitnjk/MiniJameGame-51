@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine.UI;
 
 #region UpgradeInfo
 
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text clickFeedbackPrefab;
 
     [Header("Trash Meter")]
+    [SerializeField] private Slider trashSliderUI;
     [SerializeField] private float trashMeterThreshold = 5f;
     [SerializeField] private float trashMeterPerClick = 1f;
     private float currentTrashMeter = 0f;
@@ -105,6 +107,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UpdateUI();
+        trashSliderUI.minValue = 0f;
+		trashSliderUI.maxValue = 1f;
+		trashSliderUI.value = 0f;
     }
 
     void InitializeUpgrades()
@@ -374,6 +379,8 @@ public class GameManager : MonoBehaviour
             currentTrashMeter = 0f;
             TriggerTrashReward();
         }
+
+        trashSliderUI.value = GetTrashMeterFill();
     }
 
     void TriggerTrashReward()

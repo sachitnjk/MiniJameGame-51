@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FishBase : MonoBehaviour
@@ -9,7 +10,8 @@ public class FishBase : MonoBehaviour
     private GameObject instantiatedFishVisual;
     private Transform targetTransform;
 
-    [SerializeField] private float moveSpeed = 2f;
+	[SerializeField] private GameObject BubbleVFX;
+	[SerializeField] private float moveSpeed = 2f;
 
     public bool isTrash;
 
@@ -61,10 +63,36 @@ public class FishBase : MonoBehaviour
         targetTransform = target;
     }
 
+	private void SpawnBubbleBurst()
+	{
+		if (BubbleVFX == null) return;
+
+		int bubbleCount = Random.Range(4, 8);
+		float radius = 0.4f;
+
+		for (int i = 0; i < bubbleCount; i++)
+		{
+			float angle = Random.Range(0f, Mathf.PI * 2f);
+			float r = Random.Range(0.1f, radius);
+
+			Vector3 pos = transform.position + new Vector3(
+				Mathf.Cos(angle) * r,
+				Mathf.Sin(angle) * r,
+				0f);
+
+			GameObject bubble = Instantiate(BubbleVFX, pos, Quaternion.identity);
+
+			// small random scale for variety
+			float s = Random.Range(0.8f, 1.3f);
+			bubble.transform.localScale = Vector3.one * s;
+		}
+	}
+
     private void DespawnCurrentFish()
     {
         //trigger vfx;
-		SoundManager.instance?.PlayFishDeathSFX();
+        SpawnBubbleBurst();
+
         Destroy(this.gameObject);
     }
 

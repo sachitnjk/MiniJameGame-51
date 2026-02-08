@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClickerInput
   speakerTransform: {fileID: 1082832047522381694}
+  clickBubblePrefab: {fileID: 5145752707321046031, guid: ba43732b795ccc54c9cc0f85114262bf, type: 3}
 --- !u!1001 &1195541428681968542
 PrefabInstance:
   m_ObjectHideFlags: 0
