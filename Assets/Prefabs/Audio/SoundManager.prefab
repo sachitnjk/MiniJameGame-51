@@ -47,25 +47,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
   clickSFX_Config:
-    clip: {fileID: 0}
-    volume: 0
-    group: {fileID: 0}
+    clip: {fileID: 8300000, guid: fdd396a964aba70448c47522df1cff09, type: 3}
+    group: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
     isLooping: 0
   baseBGM_Config:
-    clip: {fileID: 0}
-    volume: 0
-    group: {fileID: 0}
-    isLooping: 0
+    clip: {fileID: 8300000, guid: a6490b51df7370c40846bdb787bf49e4, type: 3}
+    group: {fileID: 2879126948209324323, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
+    isLooping: 1
   fishDeathSFX_Config:
-    clip: {fileID: 0}
-    volume: 0
-    group: {fileID: 0}
+    clip: {fileID: 8300000, guid: c1a5de720d989084db87531bae90a298, type: 3}
+    group: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
     isLooping: 0
   buttonSFX_Config:
-    clip: {fileID: 0}
-    volume: 0
-    group: {fileID: 0}
+    clip: {fileID: 8300000, guid: 7c1a0cf75e44a7a4e93d4bb86743df94, type: 3}
+    group: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
     isLooping: 0
+  panelSlideSFX_Config:
+    clip: {fileID: 8300000, guid: a15be21aea9abdf41a6d1cc1f3fb43d9, type: 3}
+    group: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
+    isLooping: 0
+  upgradeSFX_Config:
+    clip: {fileID: 8300000, guid: 9e46ce42e447b1c43810e88d01cd21de, type: 3}
+    group: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
+    isLooping: 0
+  audioMixer: {fileID: 24100000, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
   bgmSource: {fileID: 7443169891351089990}
   sfxSource: {fileID: 419372388135567790}
 --- !u!82 &7443169891351089990

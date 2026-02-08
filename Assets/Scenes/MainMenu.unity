@@ -4886,46 +4886,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: audioMixer
-      value: 
-      objectReference: {fileID: 24100000, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: baseBGM_Config.clip
-      value: 
-      objectReference: {fileID: 8300000, guid: a6490b51df7370c40846bdb787bf49e4, type: 3}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: baseBGM_Config.group
-      value: 
-      objectReference: {fileID: 2879126948209324323, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: clickSFX_Config.clip
-      value: 
-      objectReference: {fileID: 8300000, guid: fdd396a964aba70448c47522df1cff09, type: 3}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: buttonSFX_Config.clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 7c1a0cf75e44a7a4e93d4bb86743df94, type: 3}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: clickSFX_Config.group
-      value: 
-      objectReference: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: buttonSFX_Config.group
-      value: 
-      objectReference: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: baseBGM_Config.isLooping
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: fishDeathSFX_Config.clip
-      value: 
-      objectReference: {fileID: 8300000, guid: c1a5de720d989084db87531bae90a298, type: 3}
-    - target: {fileID: 6642473615655599979, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
-      propertyPath: fishDeathSFX_Config.group
-      value: 
-      objectReference: {fileID: 5353037693970689040, guid: 05552c4abf603c146ab4e231710919a3, type: 2}
     - target: {fileID: 6957841861586556244, guid: d85e49a963d787d4e981be98ddb0b276, type: 3}
       propertyPath: m_Name
       value: SoundManager

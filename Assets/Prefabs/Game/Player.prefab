@@ -98,6 +98,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseSpeaker
       objectReference: {fileID: 0}
+    - target: {fileID: 7756463454179887920, guid: 0aed8883c5519374fa7284695d3989e4, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 807366083, guid: 949c173a8ad7670428f5f4f1fa5a6c85, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

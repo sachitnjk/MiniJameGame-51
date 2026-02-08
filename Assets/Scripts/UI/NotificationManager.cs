@@ -9,6 +9,8 @@ public class NotificationManager : MonoBehaviour
 	{
 		NotificationState notif = Instantiate(notificationBannerPrefab, notificationParent);
 
+		SoundManager.instance.PlayPanelSlideSFX();
+
 		notif.SetMessage(message);
 
 		UIManager.instance.UI_StateMachine.Push(notif);

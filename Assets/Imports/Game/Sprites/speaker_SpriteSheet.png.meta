@@ -1,0 +1,271 @@
+fileFormatVersion: 2
+guid: 949c173a8ad7670428f5f4f1fa5a6c85
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: speaker_SpriteSheet_29
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 760
+        width: 144
+        height: 151
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aebe429360c50845a0e63fc182e8a2f
+      internalID: 807366083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: d671b78320ae2a84ca351fb421962921
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      speaker_SpriteSheet_0: 1344421686
+      speaker_SpriteSheet_1: 1325465974
+      speaker_SpriteSheet_10: 1756871143
+      speaker_SpriteSheet_11: 1524228091
+      speaker_SpriteSheet_12: -1774604294
+      speaker_SpriteSheet_13: 494382750
+      speaker_SpriteSheet_14: -1706887063
+      speaker_SpriteSheet_15: 1903506132
+      speaker_SpriteSheet_16: -1956820770
+      speaker_SpriteSheet_17: 1209603398
+      speaker_SpriteSheet_18: 794095448
+      speaker_SpriteSheet_19: 929580322
+      speaker_SpriteSheet_2: 175215185
+      speaker_SpriteSheet_20: 1531664336
+      speaker_SpriteSheet_21: -2088884735
+      speaker_SpriteSheet_22: -258016308
+      speaker_SpriteSheet_23: 141656403
+      speaker_SpriteSheet_24: -1678471356
+      speaker_SpriteSheet_25: 94349890
+      speaker_SpriteSheet_26: 987225980
+      speaker_SpriteSheet_27: 130104044
+      speaker_SpriteSheet_28: 1615500529
+      speaker_SpriteSheet_29: 807366083
+      speaker_SpriteSheet_3: 200211859
+      speaker_SpriteSheet_30: -208161230
+      speaker_SpriteSheet_31: -327530536
+      speaker_SpriteSheet_32: -1940790492
+      speaker_SpriteSheet_33: -820215189
+      speaker_SpriteSheet_34: -1534987789
+      speaker_SpriteSheet_35: -1598741304
+      speaker_SpriteSheet_36: 156769530
+      speaker_SpriteSheet_37: 178162266
+      speaker_SpriteSheet_38: -2111708081
+      speaker_SpriteSheet_39: -509131231
+      speaker_SpriteSheet_4: 976447379
+      speaker_SpriteSheet_40: -1094188321
+      speaker_SpriteSheet_41: -747570548
+      speaker_SpriteSheet_42: -84819087
+      speaker_SpriteSheet_43: 623237900
+      speaker_SpriteSheet_44: -164323041
+      speaker_SpriteSheet_45: 1379823262
+      speaker_SpriteSheet_46: 2099062978
+      speaker_SpriteSheet_47: -1362103700
+      speaker_SpriteSheet_48: 136471316
+      speaker_SpriteSheet_49: 1706406767
+      speaker_SpriteSheet_5: -419235276
+      speaker_SpriteSheet_50: -586731608
+      speaker_SpriteSheet_51: -400229522
+      speaker_SpriteSheet_52: 358718453
+      speaker_SpriteSheet_53: -1969126591
+      speaker_SpriteSheet_54: 1603310172
+      speaker_SpriteSheet_55: 371226440
+      speaker_SpriteSheet_56: 749288083
+      speaker_SpriteSheet_57: 1124893121
+      speaker_SpriteSheet_58: 1311191582
+      speaker_SpriteSheet_59: -1619203231
+      speaker_SpriteSheet_6: -418060526
+      speaker_SpriteSheet_60: -1753648450
+      speaker_SpriteSheet_61: 1098825648
+      speaker_SpriteSheet_62: -1701071498
+      speaker_SpriteSheet_63: 1581998736
+      speaker_SpriteSheet_64: 1825398133
+      speaker_SpriteSheet_65: -400317909
+      speaker_SpriteSheet_66: 400012152
+      speaker_SpriteSheet_67: 722182210
+      speaker_SpriteSheet_68: 1562094461
+      speaker_SpriteSheet_69: 1025025061
+      speaker_SpriteSheet_7: -1118778296
+      speaker_SpriteSheet_70: -1160008055
+      speaker_SpriteSheet_71: 2147446175
+      speaker_SpriteSheet_72: 85266465
+      speaker_SpriteSheet_73: -559310470
+      speaker_SpriteSheet_74: 2108501477
+      speaker_SpriteSheet_75: 1607328903
+      speaker_SpriteSheet_76: 2003488596
+      speaker_SpriteSheet_77: 760058992
+      speaker_SpriteSheet_8: -1775197516
+      speaker_SpriteSheet_9: -428089038
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
