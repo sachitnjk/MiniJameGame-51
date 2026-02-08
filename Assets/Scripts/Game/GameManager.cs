@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject minionSpeakerPrefab;
 
     [Header("Net Upgrades")]
-    private int netMultiplier = 5;
+    private int netMultiplier = 3;
 
     [Header("Upgrade System")]
     private List<UpgradeDefinition> allUpgrades = new List<UpgradeDefinition>();
@@ -253,7 +253,10 @@ public class GameManager : MonoBehaviour
                 break;
 
             case UpgradeType.CastNet:
-                playerXP += xpPerFish * netMultiplier;
+                for (int i = 0; i < netMultiplier; i++)
+                {
+                    RollForSpawn("Main Speaker", true);
+                }
                 CheckTierProgress();
                 break;
 
@@ -321,14 +324,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void RollForSpawn(string source)
+    void RollForSpawn(string source, bool guaranteed = false)
     {
-        bool isFish = Random.value <= fishWeight;
+        if (!guaranteed)
+        {
+            bool isFish = Random.value <= fishWeight;
 
-        if (isFish)
-            FishSpawner.SpawnFish(false);
+            if (isFish)
+                FishSpawner.SpawnFish(false);
+            else
+                FishSpawner.SpawnFish(true);
+        }
         else
-            FishSpawner.SpawnFish(true);
+            FishSpawner.SpawnFish(false);
     }
 
     void SpawnClickFeedback()
