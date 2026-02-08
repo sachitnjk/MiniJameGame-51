@@ -16,6 +16,8 @@ public class SettingsState : UIState
 
 	public void OnBackPressed()
 	{
+		PlayButtonSound();
+
 		UIManager.instance.UI_StateMachine.Pop();
 	}
 }

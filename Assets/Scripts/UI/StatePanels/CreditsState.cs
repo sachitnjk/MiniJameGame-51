@@ -17,6 +17,8 @@ public class CreditsState : UIState
 	public void OnBackPressed()
 	{
 		UIManager.instance.UI_StateMachine.Pop();
+
+		PlayButtonSound();
 	}
 
 }

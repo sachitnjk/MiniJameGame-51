@@ -84,7 +84,6 @@ MonoBehaviour:
   xpGain: 0.1
   currentXPThreshold: 1
   maxThreshold: 100
-  upgrades: []
   clickMultiplier: 1
   <inputProvider>k__BackingField: {fileID: 2339009742134612868}
   <FishSpawner>k__BackingField: {fileID: 8239661374005675648}
