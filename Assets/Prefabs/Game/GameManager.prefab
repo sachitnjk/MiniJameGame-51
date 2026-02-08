@@ -77,15 +77,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca36c4c39d3ff5439564af0a7872f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  clicksRequiredForSpawn: 6
-  fishWeight: 0.7
+  clicksRequiredForSpawn: 8
+  fishWeight: 0.4
   <consumeRadius>k__BackingField: 2
   playerXP: 0
-  xpPerFish: 1
+  xpPerFish: 2
   minionXPBonus: 0
   minionSpeakerPrefab: {fileID: 5917467298858511234, guid: 2a4d9f93d1a86a442947457e4e737e6d, type: 3}
   <inputProvider>k__BackingField: {fileID: 2339009742134612868}
   <FishSpawner>k__BackingField: {fileID: 8239661374005675648}
+  gameUICanvas: {fileID: 0}
+  playerXPText: {fileID: 0}
+  nextTierText: {fileID: 0}
+  clickFeedbackPrefab: {fileID: 6599041211676313869, guid: 3586d127ff72ca741aa9ebe930cc5f1e, type: 3}
   trashMeterThreshold: 15
   trashMeterPerClick: 1
 --- !u!114 &2339009742134612868

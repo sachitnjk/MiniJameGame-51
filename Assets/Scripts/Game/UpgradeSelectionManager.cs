@@ -18,7 +18,6 @@ public class UpgradeSelectionManager : MonoBehaviour
 
     private List<GameObject> activeButtons = new List<GameObject>();
     private bool isMenuVisible = false;
-    private int currentDisplayedTier = 0;
     private Vector2 targetPosition;
 
     private void Awake()
@@ -55,7 +54,10 @@ public class UpgradeSelectionManager : MonoBehaviour
 
     public void ToggleMenu()
     {
-        if (GameManager.instance.HasAvailableUpgrades())
+        GameManager.instance.GenerateUpgradeChoices();
+        var upgrades = GameManager.instance.GetAvailableUpgrades();
+
+        if (upgrades.Count > 0)
         {
             if (isMenuVisible)
             {
@@ -63,13 +65,13 @@ public class UpgradeSelectionManager : MonoBehaviour
             }
             else
             {
+                RefreshButtons(upgrades);
                 ShowMenu();
             }
         }
         else
         {
-            Debug.Log("No upgrades available yet. Reach a tier threshold first!");
-            UIManager.instance.UI_NotificationManager.Show($"No available upgrades for current tier!");
+            UIManager.instance.UI_NotificationManager.Show("No upgrades available.");
         }
     }
 
@@ -77,50 +79,24 @@ public class UpgradeSelectionManager : MonoBehaviour
     {
         isMenuVisible = true;
         targetPosition = new Vector2(visibleXPosition, upgradeMenuPanel.anchoredPosition.y);
-        Debug.Log("Showing upgrade menu");
     }
 
     private void HideMenu()
     {
         isMenuVisible = false;
         targetPosition = new Vector2(hiddenXPosition, upgradeMenuPanel.anchoredPosition.y);
-        Debug.Log("Hiding upgrade menu");
     }
 
     public void ShowUpgradeSelection(List<UpgradeDefinition> upgrades, int tier)
     {
-        if (upgradeMenuPanel == null || buttonContainer == null || upgradeButtonPrefab == null)
-        {
-            Debug.LogError("UpgradeSelectionManager: Missing UI references!");
-            return;
-        }
-
-        // Refresh if tier changed or no buttons
-        bool tierChanged = (tier != currentDisplayedTier);
-        bool noButtonsExist = (activeButtons.Count == 0);
-
-        if (tierChanged || noButtonsExist)
-        {
-            if (tierChanged)
-            {
-                Debug.Log($"Tier changed from {currentDisplayedTier} to {tier}! Refreshing upgrade buttons.");
-                currentDisplayedTier = tier;
-            }
-
-            RefreshButtons(upgrades);
-        }
-
-        // Auto-show menu
+        RefreshButtons(upgrades);
         ShowMenu();
-
-        Debug.Log($"Upgrade selection ready with {upgrades.Count} choices from Tier {tier}. Right-click to toggle menu.");
     }
 
     private void RefreshButtons(List<UpgradeDefinition> upgrades)
     {
         ClearButtons();
 
-        // Spawn button
         for (int i = 0; i < upgrades.Count; i++)
         {
             UpgradeDefinition upgrade = upgrades[i];
@@ -134,34 +110,13 @@ public class UpgradeSelectionManager : MonoBehaviour
                 upgradeButton.Initialize(upgrade, choiceIndex, OnUpgradeSelected);
                 activeButtons.Add(buttonObj);
             }
-            else
-            {
-                Debug.LogError("UpgradeButton component not found on prefab!");
-            }
         }
     }
 
     private void OnUpgradeSelected(int choiceIndex)
     {
-        Debug.Log($"Player selected upgrade at index {choiceIndex}");
-
-        // Apply through GameManager
         GameManager.instance.SelectUpgrade(choiceIndex);
-
-        // Refresh with remaining upgrades
-        var remainingUpgrades = GameManager.instance.GetAvailableUpgrades();
-
-        if (remainingUpgrades.Count > 0)
-        {
-            RefreshButtons(remainingUpgrades);
-        }
-        else
-        {
-            // No upgrades left
-            ClearButtons();
-            currentDisplayedTier = 0;
-            HideMenu();
-        }
+        RefreshButtons(GameManager.instance.GetAvailableUpgrades());
     }
 
     private void ClearButtons()
@@ -170,6 +125,7 @@ public class UpgradeSelectionManager : MonoBehaviour
         {
             Destroy(button);
         }
+
         activeButtons.Clear();
     }
 }

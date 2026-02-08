@@ -31,10 +31,6 @@ public class FishBase : MonoBehaviour
             {
                 GameManager.instance.AddFishXP();
             }
-            else
-            {
-                GameManager.instance.AddToTrash();
-            }
 
             DespawnCurrentFish();
         }
@@ -99,6 +95,15 @@ public class FishBase : MonoBehaviour
 
         Destroy(this.gameObject);
     }
+
+    private void DespawnCurrentTrash()
+    {
+        //trigger vfx;
+        SoundManager.instance?.PlayFishDeathSFX();
+        Destroy(this.gameObject);
+    }
+
+
 
     private void OnMouseDown()
     {

@@ -21,7 +21,24 @@ public class UpgradeButton : MonoBehaviour
         // Set text content
         if (titleText != null)
         {
-            titleText.text = upgrade.displayName;
+            switch (upgrade.tier)
+            {
+                case 1:
+                    titleText.text = $"{upgrade.displayName}    10Xp";
+                    break;
+                
+                case 2:
+                    titleText.text = $"{upgrade.displayName}    40Xp";
+                    break;
+                
+                case 3:
+                    titleText.text = $"{upgrade.displayName}    120Xp";
+                    break;
+                
+                case 4:
+                    titleText.text = $"{upgrade.displayName}    300Xp";
+                    break;
+            }
         }
 
         if (descriptionText != null)
