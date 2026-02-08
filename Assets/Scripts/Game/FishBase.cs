@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FishBase : MonoBehaviour
@@ -91,10 +92,13 @@ public class FishBase : MonoBehaviour
 		}
 	}
 
-	private void DespawnCurrentFish()
-	{
-		//trigger vfx;
-		SpawnBubbleBurst();
+    private void DespawnCurrentFish()
+    {
+        //trigger vfx;
+        SpawnBubbleBurst();
+
+        Destroy(this.gameObject);
+    }
 
     private void OnMouseDown()
     {
