@@ -12,6 +12,9 @@ public class PlayerManager : MonoBehaviour
     private GameManager gameManager;
     private InputAction leftClickAction;
     private InputAction rightClickAction;
+    private InputAction pauseAction;
+
+    private bool isPaused = false;
 
     private void Start()
     {
@@ -21,9 +24,11 @@ public class PlayerManager : MonoBehaviour
 
         leftClickAction = playerInput.actions["LeftClick"];
         rightClickAction = playerInput.actions["RightClick"];
+        pauseAction = playerInput.actions["Pause"];
 
         leftClickAction.performed += HandleLeftClick;
         rightClickAction.performed += HandleRightClick;
+        pauseAction.performed += HandlePause;
 
         leftClickAction.Enable();
         rightClickAction.Enable();
@@ -35,6 +40,7 @@ public class PlayerManager : MonoBehaviour
     {
         leftClickAction.performed -= HandleLeftClick;
         rightClickAction.performed -= HandleRightClick;
+        pauseAction.performed -= HandlePause;
     }
 
     void HandleLeftClick(InputAction.CallbackContext ctx)
@@ -108,6 +114,23 @@ public class PlayerManager : MonoBehaviour
         Debug.Log($"Right-click #{totalRightClicks} - toggling upgrade menu");
     }
 
-    public int GetTotalLeftClicks() => totalLeftClicks;
+    void HandlePause(InputAction.CallbackContext ctx)
+    {
+        if(isPaused)
+        {
+            isPaused = false;
+
+            UIManager.instance.UI_StateMachine.Pop();
+        }
+        else
+        {
+            isPaused = true;
+
+            UIManager.instance.UI_StateMachine.Push(UIManager.instance.UI_PauseMenu);
+        }
+    }
+
+
+	public int GetTotalLeftClicks() => totalLeftClicks;
     public int GetTotalRightClicks() => totalRightClicks;
 }

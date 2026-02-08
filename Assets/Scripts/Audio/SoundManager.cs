@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -114,4 +115,14 @@ public class SoundManager : MonoBehaviour
 	}
 
 	#endregion
+
+	public bool TryGetMixerValue(string param, out float value)
+	{
+		return audioMixer.GetFloat(param, out value);
+	}
+
+	public static float DBToLinear(float db)
+	{
+		return Mathf.Pow(10f, db / 20);
+	}
 }
