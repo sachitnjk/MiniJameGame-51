@@ -48,14 +48,19 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField] public float consumeRadius { get; private set; }
 
+    [Header("Consume Radius Visual")]
+    [SerializeField] private int circleSegments = 100;
+    [SerializeField] private float circleLineWidth = 0.05f;
+    private LineRenderer consumeRadiusRenderer;
+
     [Header("XP Settings")]
     public float playerXP = 0f;
     public float xpPerFish = 2f;
 
     [Header("Tier Unlock System")]
     private int highestUnlockedTier = 1;
-    private float[] tierUnlockThresholds = { 0f, 0f, 50f, 150f, 400f };
-    private float[] tierUpgradeCosts = { 0f, 10f, 40f, 120f, 300f };
+    private float[] tierUnlockThresholds = { 0f, 10f, 20f, 50f, 90f };
+    private float[] tierUpgradeCosts = { 0f, 10f, 25f, 60f, 100f };
 
     [Header("Minion Speakers")]
     private int minionCount = 0;
@@ -107,9 +112,13 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UpdateUI();
-        trashSliderUI.minValue = 0f;
-		trashSliderUI.maxValue = 1f;
-		trashSliderUI.value = 0f;
+
+        if (trashSliderUI != null)
+        {
+            trashSliderUI.minValue = 0f;
+            trashSliderUI.maxValue = 1f;
+            trashSliderUI.value = 0f;
+        }
     }
 
     void InitializeUpgrades()
@@ -138,7 +147,18 @@ public class GameManager : MonoBehaviour
     {
         float totalXP = xpPerFish + minionXPBonus;
         playerXP += totalXP;
+
+        int previousTier = highestUnlockedTier;
         CheckTierProgress();
+
+        if (highestUnlockedTier != previousTier)
+        {
+            GenerateUpgradeChoices();
+
+            if (UpgradeSelectionManager.instance != null)
+                UpgradeSelectionManager.instance.RefreshIfOpen();
+        }
+
         UpdateUI();
     }
 
@@ -154,6 +174,7 @@ public class GameManager : MonoBehaviour
     public void RegisterSpeakerTransform(Transform speakerTransform)
     {
         registeredMainSpeakerTransform = speakerTransform;
+        CreateConsumeRadiusVisual();
     }
 
     #endregion
@@ -250,6 +271,7 @@ public class GameManager : MonoBehaviour
 
             case UpgradeType.IncreaseConsumeRadius:
                 consumeRadius += 0.5f;
+                UpdateConsumeRadiusVisual();
                 break;
 
             case UpgradeType.MinionSpeaker:
@@ -287,19 +309,15 @@ public class GameManager : MonoBehaviour
     public void ProcessClick()
     {
         currentClickCount++;
-
         SpawnClickFeedback();
 
         if (currentClickCount >= clicksRequiredForSpawn)
         {
             currentClickCount = 0;
-
             RollForSpawn("Main Speaker");
 
             for (int i = 0; i < minionCount; i++)
-            {
                 RollForSpawn($"Minion {i + 1}");
-            }
         }
     }
 
@@ -322,6 +340,7 @@ public class GameManager : MonoBehaviour
         instance.text = currentClickCount + "x";
 
         RectTransform rect = instance.rectTransform;
+
         Vector2 screenPos = Input.mousePosition;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -352,7 +371,6 @@ public class GameManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-
             float eased = 1f - Mathf.Pow(1f - t, 3f);
 
             rect.localScale = Vector3.Lerp(startScale, endScale, eased);
@@ -363,8 +381,6 @@ public class GameManager : MonoBehaviour
 
         Destroy(text.gameObject);
     }
-
-
 
     #endregion
 
@@ -380,7 +396,8 @@ public class GameManager : MonoBehaviour
             TriggerTrashReward();
         }
 
-        trashSliderUI.value = GetTrashMeterFill();
+        if (trashSliderUI != null)
+            trashSliderUI.value = GetTrashMeterFill();
     }
 
     void TriggerTrashReward()
@@ -398,7 +415,7 @@ public class GameManager : MonoBehaviour
 
     #region UI
 
-    private void UpdateUI()
+    void UpdateUI()
     {
         if (playerXPText != null)
             playerXPText.text = $"{Mathf.FloorToInt(playerXP)}";
@@ -406,14 +423,53 @@ public class GameManager : MonoBehaviour
         if (nextTierText != null)
         {
             if (highestUnlockedTier < tierUnlockThresholds.Length - 1)
-            {
-                float nextThreshold = tierUnlockThresholds[highestUnlockedTier + 1];
-                nextTierText.text = $"{nextThreshold}";
-            }
+                nextTierText.text = $"{tierUnlockThresholds[highestUnlockedTier + 1]}";
             else
-            {
-                nextTierText.text = "Max Tier Reached";
-            }
+                nextTierText.text = "Max";
+        }
+    }
+
+    #endregion
+
+    #region Consume Radius Visual
+
+    void CreateConsumeRadiusVisual()
+    {
+        if (registeredMainSpeakerTransform == null)
+            return;
+
+        GameObject circleObj = new GameObject("ConsumeRadiusVisual");
+        circleObj.transform.SetParent(registeredMainSpeakerTransform);
+        circleObj.transform.localPosition = Vector3.zero;
+
+        consumeRadiusRenderer = circleObj.AddComponent<LineRenderer>();
+        consumeRadiusRenderer.loop = true;
+        consumeRadiusRenderer.useWorldSpace = false;
+        consumeRadiusRenderer.positionCount = circleSegments;
+        consumeRadiusRenderer.startWidth = circleLineWidth;
+        consumeRadiusRenderer.endWidth = circleLineWidth;
+
+        Material mat = new Material(Shader.Find("Sprites/Default"));
+        mat.color = new Color(1f, 1f, 1f, 0.15f);
+        consumeRadiusRenderer.material = mat;
+
+        UpdateConsumeRadiusVisual();
+    }
+
+    void UpdateConsumeRadiusVisual()
+    {
+        if (consumeRadiusRenderer == null)
+            return;
+
+        float angleStep = 360f / circleSegments;
+
+        for (int i = 0; i < circleSegments; i++)
+        {
+            float angle = Mathf.Deg2Rad * (i * angleStep);
+            float x = Mathf.Cos(angle) * consumeRadius;
+            float y = Mathf.Sin(angle) * consumeRadius;
+
+            consumeRadiusRenderer.SetPosition(i, new Vector3(x, y, 0f));
         }
     }
 
