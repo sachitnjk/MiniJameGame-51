@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8596794016caf544b92c429cde934ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishBase
+  BubbleVFX: {fileID: 2450323631140805200, guid: fa7dee9395629a8419f055d910fe3776, type: 3}
+  moveSpeed: 2
+  isTrash: 0
