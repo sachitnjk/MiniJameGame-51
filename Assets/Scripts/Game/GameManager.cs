@@ -263,11 +263,11 @@ public class GameManager : MonoBehaviour
                         Vector3 offset = Vector3.zero;
 
                         if (minionCount == 1)
-                            offset = new Vector3(-50f, 0f, 0f);
+                            offset = new Vector3(-5f, 0f, 0f);
                         else if (minionCount == 2)
-                            offset = new Vector3(50f, 0f, 0f);
+                            offset = new Vector3(5f, 0f, 0f);
                         else if (minionCount == 3)
-                            offset = new Vector3(0f, -50f, 0f);
+                            offset = new Vector3(0f, -5f, 0f);
 
                         Instantiate(minionSpeakerPrefab, basePos + offset, Quaternion.identity);
                     }
