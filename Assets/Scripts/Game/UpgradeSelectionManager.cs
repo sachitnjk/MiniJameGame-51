@@ -128,4 +128,12 @@ public class UpgradeSelectionManager : MonoBehaviour
 
         activeButtons.Clear();
     }
+
+    public void RefreshIfOpen()
+    {
+        if (!isMenuVisible)
+            return;
+
+        RefreshButtons(GameManager.instance.GetAvailableUpgrades());
+    }
 }

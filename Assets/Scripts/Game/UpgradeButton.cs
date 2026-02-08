@@ -24,19 +24,19 @@ public class UpgradeButton : MonoBehaviour
             switch (upgrade.tier)
             {
                 case 1:
-                    titleText.text = $"{upgrade.displayName}    10Xp";
+                    titleText.text = $"{upgrade.displayName}: 10Xp";
                     break;
                 
                 case 2:
-                    titleText.text = $"{upgrade.displayName}    40Xp";
+                    titleText.text = $"{upgrade.displayName}: 25Xp";
                     break;
                 
                 case 3:
-                    titleText.text = $"{upgrade.displayName}    120Xp";
+                    titleText.text = $"{upgrade.displayName}: 60Xp";
                     break;
                 
                 case 4:
-                    titleText.text = $"{upgrade.displayName}    300Xp";
+                    titleText.text = $"{upgrade.displayName}: 100Xp";
                     break;
             }
         }
