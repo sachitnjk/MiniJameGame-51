@@ -17,6 +17,8 @@ public class MainMenuState : UIState
 
 	public void OnPlayPressed()
 	{
+		EnterFullScreen();
+
 		SceneManager.LoadScene("Playground");
 	}
 
@@ -37,5 +39,12 @@ public class MainMenuState : UIState
 	public void OnExitPressed()
 	{
 		Application.Quit();
+	}
+
+	public void EnterFullScreen()
+	{
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Screen.fullScreen = true;
+#endif
 	}
 }
