@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 #region UpgradeInfo
 
@@ -75,6 +76,7 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public FishSpawner FishSpawner { get; private set; }
 
     [Header("Trash Meter")]
+    [SerializeField] private Slider trashSliderUI;
     [SerializeField] private float trashMeterThreshold = 5f;
     [SerializeField] private float trashMeterPerClick = 1f;
     private float currentTrashMeter = 0f;
@@ -97,7 +99,14 @@ public class GameManager : MonoBehaviour
         InitializeUpgrades();
     }
 
-    void InitializeUpgrades()
+	private void Start()
+	{
+		trashSliderUI.minValue = 0f;
+		trashSliderUI.maxValue = 1f;
+		trashSliderUI.value = 0f;
+	}
+
+	void InitializeUpgrades()
     {
         allUpgrades = new List<UpgradeDefinition>
         {
@@ -373,6 +382,8 @@ public class GameManager : MonoBehaviour
             currentTrashMeter = 0f;
             TriggerTrashReward();
         }
+
+        trashSliderUI.value = GetTrashMeterFill();
     }
 
     void TriggerTrashReward()
