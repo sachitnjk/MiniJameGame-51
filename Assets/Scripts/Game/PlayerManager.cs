@@ -46,6 +46,8 @@ public class PlayerManager : MonoBehaviour
 
     void HandleLeftClick(InputAction.CallbackContext ctx)
     {
+        SoundManager.instance?.PlayClickSFX();
+
         int multiplier = gameManager.clickMultiplier;
 
         for (int i = 0; i < multiplier; i++)
@@ -68,6 +70,8 @@ public class PlayerManager : MonoBehaviour
 
     void HandleRightClick(InputAction.CallbackContext ctx)
     {
+        //Sound for upgrade purchase
+
         totalRightClicks++;
         gameManager.UseUpgrade();
     }
