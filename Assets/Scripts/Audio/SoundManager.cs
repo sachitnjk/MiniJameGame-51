@@ -15,6 +15,8 @@ public class SoundManager : MonoBehaviour
 	[SerializeField] private AudioConfig baseBGM_Config;
 	[SerializeField] private AudioConfig fishDeathSFX_Config;
 	[SerializeField] private AudioConfig buttonSFX_Config;
+	[SerializeField] private AudioConfig panelSlideSFX_Config;
+	[SerializeField] private AudioConfig upgradeSFX_Config;
 
 	[SerializeField] private AudioMixer audioMixer;
 
@@ -67,6 +69,16 @@ public class SoundManager : MonoBehaviour
 	public void PlayButtonSFX()
 	{
 		PlaySFX(buttonSFX_Config);
+	}
+
+	public void PlayPanelSlideSFX()
+	{
+		PlaySFX(panelSlideSFX_Config);
+	}
+
+	public void PlayUpgradeSFX()
+	{
+		PlaySFX(upgradeSFX_Config);
 	}
 
 	private void PlaySFX(AudioConfig audioConfig)
