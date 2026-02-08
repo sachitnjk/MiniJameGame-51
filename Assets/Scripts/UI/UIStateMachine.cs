@@ -9,7 +9,11 @@ public class UIStateMachine : MonoBehaviour
 	{
 		if(stateStack.Count > 0)
 		{
-			stateStack.Peek().OnExit();
+			UIState uiState = stateStack.Peek();
+			if(uiState != null)
+			{
+				uiState.OnExit();
+			}
 		}
 
 		stateStack.Push(state);
@@ -24,7 +28,11 @@ public class UIStateMachine : MonoBehaviour
 
 		if(stateStack.Count > 0)
 		{
-			stateStack.Peek().OnEnter();
+			UIState uiState = stateStack.Peek();
+			if(uiState != null)
+			{
+				uiState.OnEnter();
+			}
 		}
 	}
 }

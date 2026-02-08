@@ -136,13 +136,15 @@ public class GameManager : MonoBehaviour
     {
         if (thresholdsBanked <= 0)
         {
-            Debug.Log("UseUpgrade called but no thresholds banked.");
+            //Debug.Log("UseUpgrade called but no thresholds banked.");
+            UIManager.instance.UI_NotificationManager.Show("UseUpgrade called but no thresholds banked.");
             return;
         }
 
         int tierToUse = thresholdsBanked;
 
-        Debug.Log($"Using Upgrade at Tier {tierToUse}");
+		UIManager.instance.UI_NotificationManager.Show($"Using Upgrade at Tier {tierToUse}");
+		//Debug.Log($"Using Upgrade at Tier {tierToUse}");
 
         var possible = upgradePool
             .Where(u => u.tier == tierToUse)
@@ -150,22 +152,25 @@ public class GameManager : MonoBehaviour
 
         if (possible.Count == 0)
         {
-            Debug.Log($"No upgrades available for Tier {tierToUse}");
-            thresholdsBanked = 0;
+            //Debug.Log($"No upgrades available for Tier {tierToUse}");
+			UIManager.instance.UI_NotificationManager.Show($"No upgrades available for Tier {tierToUse}");
+			thresholdsBanked = 0;
             playerXP = 0f;
             return;
         }
 
         Upgrade rolled = possible[Random.Range(0, possible.Count)];
 
-        Debug.Log($"Rolled Upgrade: {rolled.type} (Tier {rolled.tier})");
+        //Debug.Log($"Rolled Upgrade: {rolled.type} (Tier {rolled.tier})");
+		UIManager.instance.UI_NotificationManager.Show($"Rolled Upgrade: {rolled.type} (Tier {rolled.tier})");
 
-        ApplyOrStackUpgrade(rolled.type, rolled.tier);
+		ApplyOrStackUpgrade(rolled.type, rolled.tier);
 
         thresholdsBanked = 0;
         playerXP = 0f;
 
-        Debug.Log("Upgrade consumed. Thresholds reset. Player XP reset.");
+		UIManager.instance.UI_NotificationManager.Show("Upgrade consumed. Thresholds reset. Player XP reset.");
+		//Debug.Log("Upgrade consumed. Thresholds reset. Player XP reset.");
     }
 
     void ApplyOrStackUpgrade(UpgradeType type, int tier)
@@ -173,46 +178,53 @@ public class GameManager : MonoBehaviour
         if (activeUpgrades.ContainsKey(type))
         {
             activeUpgrades[type].multiplier++;
-            Debug.Log($"Stacking Upgrade: {type} now at Multiplier {activeUpgrades[type].multiplier}");
-        }
+            //Debug.Log($"Stacking Upgrade: {type} now at Multiplier {activeUpgrades[type].multiplier}");
+			UIManager.instance.UI_NotificationManager.Show($"Stacking Upgrade: {type} now at Multiplier {activeUpgrades[type].multiplier}");
+		}
         else
         {
             activeUpgrades[type] = new Upgrade(type, tier);
-            Debug.Log($"New Upgrade Applied: {type} at Tier {tier}");
-        }
+            //Debug.Log($"New Upgrade Applied: {type} at Tier {tier}");
+			UIManager.instance.UI_NotificationManager.Show($"New Upgrade Applied: {type} at Tier {tier}");
+		}
 
         ApplyUpgradeEffect(activeUpgrades[type]);
     }
 
     void ApplyUpgradeEffect(Upgrade upgrade)
     {
-        Debug.Log($"Applying Upgrade Effect for {upgrade.type} | Multiplier: {upgrade.multiplier}");
+        //Debug.Log($"Applying Upgrade Effect for {upgrade.type} | Multiplier: {upgrade.multiplier}");
+		UIManager.instance.UI_NotificationManager.Show($"Applying Upgrade Effect for {upgrade.type} | Multiplier: {upgrade.multiplier}");
 
-        switch (upgrade.type)
+		switch (upgrade.type)
         {
             case UpgradeType.XPGain:
                 float baseXP = currentXPThreshold;
                 xpGain = baseXP * upgrade.multiplier;
-                Debug.Log($"XP Gain recalculated. Base: {baseXP}, Multiplier: {upgrade.multiplier}, New xpGain: {xpGain}");
-                break;
+                //Debug.Log($"XP Gain recalculated. Base: {baseXP}, Multiplier: {upgrade.multiplier}, New xpGain: {xpGain}");
+				UIManager.instance.UI_NotificationManager.Show($"XP Gain recalculated. Base: {baseXP}, Multiplier: {upgrade.multiplier}, New xpGain: {xpGain}");
+				break;
 
             case UpgradeType.SpawnRate:
                 float increase = 0.1f * upgrade.multiplier;
                 spawnRate += increase;
-                Debug.Log($"Spawn Rate increased by {increase}. New spawnRate: {spawnRate}");
-                break;
+                //Debug.Log($"Spawn Rate increased by {increase}. New spawnRate: {spawnRate}");
+				UIManager.instance.UI_NotificationManager.Show($"Spawn Rate increased by {increase}. New spawnRate: {spawnRate}");
+				break;
 
             case UpgradeType.InstantXP:
                 float totalInstant = xpGain * upgrade.multiplier;
                 playerXP += totalInstant;
-                Debug.Log($"Instant XP triggered. Gained: {totalInstant}, New Player XP: {playerXP}");
-                CheckThreshold();
+                //Debug.Log($"Instant XP triggered. Gained: {totalInstant}, New Player XP: {playerXP}");
+				UIManager.instance.UI_NotificationManager.Show($"Instant XP triggered. Gained: {totalInstant}, New Player XP: {playerXP}");
+				CheckThreshold();
                 break;
 
             case UpgradeType.ClickMultiplier:
                 clickMultiplier = 1 + upgrade.multiplier;
-                Debug.Log($"Click Multiplier updated. New Click Multiplier: {clickMultiplier}");
-                break;
+                //Debug.Log($"Click Multiplier updated. New Click Multiplier: {clickMultiplier}");
+				UIManager.instance.UI_NotificationManager.Show($"Click Multiplier updated. New Click Multiplier: {clickMultiplier}");
+				break;
         }
     }
     #endregion

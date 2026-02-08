@@ -5,6 +5,7 @@ public class UIManager : MonoBehaviour
 	public static UIManager instance;
 
 	[field: SerializeField] public UIStateMachine UI_StateMachine { get; private set; }
+	[field: SerializeField] public NotificationManager UI_NotificationManager { get; private set; }
 
 	private void Awake()
 	{
