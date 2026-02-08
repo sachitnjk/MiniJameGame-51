@@ -1,73 +1,70 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class FishBase : MonoBehaviour
 {
-	private Vector3 spawnScale;
-	private Vector3 targetScale;
-	private GameObject fishVisualPrefab;
+    private Vector3 spawnScale;
+    private Vector3 targetScale;
+    private GameObject fishVisualPrefab;
 
-	private GameObject instantiatedFishVisual;
-	private Transform targetTransform;
+    private GameObject instantiatedFishVisual;
+    private Transform targetTransform;
 
 	[SerializeField] private GameObject BubbleVFX;
 	[SerializeField] private float moveSpeed = 2f;
 
-	public bool isTrash;
+    public bool isTrash;
 
-	private void Update()
-	{
-		Vector2 currentPos = transform.position;
-		Vector2 targetPos = targetTransform.position;
+    private void Update()
+    {
+        Vector2 currentPos = transform.position;
+        Vector2 targetPos = targetTransform.position;
+        Vector2 newPos = Vector2.MoveTowards(currentPos, targetPos, moveSpeed * Time.deltaTime);
 
-		Vector2 newPos = Vector2.MoveTowards(currentPos, targetPos, moveSpeed * Time.deltaTime);
-		transform.position = new Vector3(newPos.x, newPos.y, transform.position.z);
+        transform.position = new Vector3(newPos.x, newPos.y, transform.position.z);
 
-		float distanceToTarget = Vector2.Distance(newPos, targetPos);
-		if (distanceToTarget <= GameManager.instance.consumeRadius)
-		{
-			if(!isTrash)
-			{
-				GameManager.instance.RollForXP();
-			}
-			else
-			{
-				//Still WIP
-				GameManager.instance.AddToTrash();
-			}
+        float distanceToTarget = Vector2.Distance(newPos, targetPos);
 
-			DespawnCurrentFish();
-		}
-	}
+        if (distanceToTarget <= GameManager.instance.consumeRadius)
+        {
+            if (!isTrash)
+            {
+                GameManager.instance.AddFishXP();
+            }
+            else
+            {
+                GameManager.instance.AddToTrash();
+            }
 
-	public void Initialize(FishTypeSO fishType, FishVisualSO visualSO, Transform target)
-	{
-		spawnScale = fishType.initialFishSize;
-		targetScale = fishType.targetFishSize;
-		fishVisualPrefab = visualSO.fishVisual;
+            DespawnCurrentFish();
+        }
+    }
 
-		if(fishVisualPrefab != null)
-		{
-			instantiatedFishVisual = Instantiate(fishVisualPrefab, transform);
+    public void Initialize(FishTypeSO fishType, FishVisualSO visualSO, Transform target)
+    {
+        spawnScale = fishType.initialFishSize;
+        targetScale = fishType.targetFishSize;
+        fishVisualPrefab = visualSO.fishVisual;
 
-			//Sprite flip
-			SpriteRenderer spriteRenderer = instantiatedFishVisual.GetComponentInChildren<SpriteRenderer>();
-			if(spriteRenderer != null)
-			{
-				//flipY since flipping of x is handle by the roation logic below
-				spriteRenderer.flipY = transform.position.x > target.position.x;
-			}
+        if (fishVisualPrefab != null)
+        {
+            instantiatedFishVisual = Instantiate(fishVisualPrefab, transform);
 
-			//Fish visual onject rotate towars target
-			Vector2 direction = (target.position - transform.position).normalized;
-			float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-			instantiatedFishVisual.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-		}
+            // Sprite flip
+            SpriteRenderer spriteRenderer = instantiatedFishVisual.GetComponentInChildren<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                // flipY since flipping of x is handled by the rotation logic below
+                spriteRenderer.flipY = transform.position.x > target.position.x;
+            }
 
+            // Fish visual object rotate towards target
+            Vector2 direction = (target.position - transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            instantiatedFishVisual.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
 
-
-		targetTransform = target;
-	}
+        targetTransform = target;
+    }
 
 	private void SpawnBubbleBurst()
 	{
@@ -99,8 +96,12 @@ public class FishBase : MonoBehaviour
 		//trigger vfx;
 		SpawnBubbleBurst();
 
-		SoundManager.instance?.PlayFishDeathSFX();
+    private void OnMouseDown()
+    {
+        if (!isTrash) return;
 
-		Destroy(this.gameObject);
-	}
+        GameManager.instance.ProcessTrashClick();
+        DespawnCurrentFish();
+    }
+
 }

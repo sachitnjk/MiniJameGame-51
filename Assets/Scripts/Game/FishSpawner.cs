@@ -1,90 +1,94 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FishSpawner : MonoBehaviour
 {
-	[SerializeField] private FishTypeSOComposite fishTypeComposite;
-	[SerializeField] private FishTypeSOComposite trashTypeComposite;
-	[SerializeField] private GameObject blankFishPrefab;
-	[SerializeField] private GameObject trashFishPrefab;
+    [SerializeField] private FishTypeSOComposite fishTypeComposite;
+    [SerializeField] private FishTypeSOComposite trashTypeComposite;
+    [SerializeField] private GameObject blankFishPrefab;
+    [SerializeField] private GameObject trashFishPrefab;
 
-	private GameObject prefabToSpawn;
-	private FishTypeSO currentFishTypeToSpawn;
-	private FishVisualSO currentFishVisualToSpawn;
-	private FishTypeSOComposite currentCompositeToUse;
+    private Transform targetTransform;
 
-	private Transform targetTransform;
+    public void SpawnFish(bool isTrash)
+    {
+        if (targetTransform == null)
+        {
+            targetTransform = GameManager.instance.registeredMainSpeakerTransform;
+        }
 
-	public void TrySpawnFish(float trashSpawnRate)
-	{
-		if(targetTransform == null)
-		{
-			targetTransform = GameManager.instance.registeredMainSpeakerTransform;
-		}
+        // Select prefab and composite based on trash flag
+        GameObject prefabToSpawn = isTrash ? trashFishPrefab : blankFishPrefab;
+        FishTypeSOComposite compositeToUse = isTrash ? trashTypeComposite : fishTypeComposite;
 
-		float trashSpawnIndex = Random.Range(0f, 1f);
-		if(trashSpawnIndex < trashSpawnRate)
-		{
-			prefabToSpawn = trashFishPrefab;
+        if (compositeToUse == null || compositeToUse.fishTypeSOList.Count == 0 || compositeToUse.fishVisualSOList.Count == 0)
+        {
+            Debug.LogWarning("FishSpawner: Composite is missing data.");
+            return;
+        }
 
-			currentCompositeToUse = trashTypeComposite;
-		}
-		else
-		{
-			prefabToSpawn = blankFishPrefab;
+        // Randomly select type and visual
+        int typeIndex = Random.Range(0, compositeToUse.fishTypeSOList.Count);
+        int visualIndex = Random.Range(0, compositeToUse.fishVisualSOList.Count);
 
-			currentCompositeToUse = fishTypeComposite;
-		}
+        FishTypeSO fishType = compositeToUse.fishTypeSOList[typeIndex];
+        FishVisualSO fishVisual = compositeToUse.fishVisualSOList[visualIndex];
 
-		int typeIndex = Random.Range(0, currentCompositeToUse.fishTypeSOList.Count);
-		int visualIndex = Random.Range(0, currentCompositeToUse.fishVisualSOList.Count);
+        Vector2 spawnPos = GetSpawnPosition();
+        GameObject spawnedFish = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
 
-		currentFishTypeToSpawn = currentCompositeToUse.fishTypeSOList[typeIndex];
-		currentFishVisualToSpawn = currentCompositeToUse.fishVisualSOList[visualIndex];
+        if (spawnedFish != null)
+        {
+            FishBase fishBase = spawnedFish.GetComponent<FishBase>();
+            if (fishBase != null)
+            {
+                fishBase.Initialize(fishType, fishVisual, targetTransform);
+                fishBase.isTrash = isTrash;
+            }
+            else
+            {
+                Debug.LogWarning("FishSpawner: Spawned prefab missing FishBase component.");
+            }
+        }
+    }
+    private Vector2 GetSpawnPosition()
+    {
+        Camera mainCam = Camera.main;
+        if (mainCam == null)
+        {
+            Debug.LogError("FishSpawner: No Main Camera found.");
+            return Vector2.zero;
+        }
 
-		Vector2 spawnPos = GetSpawnPosition();
-		GameObject spawnedFish = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
-		if(spawnedFish != null)
-		{
-			FishBase fishBase = spawnedFish.GetComponent<FishBase>();
-			fishBase.Initialize(currentFishTypeToSpawn, currentFishVisualToSpawn, targetTransform);
-		}
-		
-	}
+        float z = Mathf.Abs(mainCam.transform.position.z);
+        Vector3 bottomLeft = mainCam.ViewportToWorldPoint(new Vector3(0, 0, z));
+        Vector3 topRight = mainCam.ViewportToWorldPoint(new Vector3(1, 1, z));
 
-	private Vector2 GetSpawnPosition()
-	{
-		Camera mainCam = Camera.main;
+        // How far outside the screen the fish would spawn
+        float spawnPadding = 1.5f;
 
-		float z = Mathf.Abs(mainCam.transform.position.z);
+        // 0 = Left, 1 = Right, 2 = Bottom
+        int side = Random.Range(0, 3);
 
-		Vector3 bottomLeft = mainCam.ViewportToWorldPoint(new Vector3(0, 0, z));
-		Vector3 topRight = mainCam.ViewportToWorldPoint(new Vector3(1, 1, z));
+        Vector2 spawnPos = Vector2.zero;
 
-		//How far otuside the screen teh fish would spawn
-		float spawnPadding = 1.5f;
+        switch (side)
+        {
+            case 0:
+                spawnPos.x = bottomLeft.x - spawnPadding;
+                spawnPos.y = Random.Range(bottomLeft.y, topRight.y);
+                break;
 
-		//0-L, 1-R, 2-D
-		int side = Random.Range(0, 3);
+            case 1:
+                spawnPos.x = topRight.x + spawnPadding;
+                spawnPos.y = Random.Range(bottomLeft.y, topRight.y);
+                break;
 
-		Vector2 spawnPos = Vector2.zero;
+            case 2:
+                spawnPos.y = bottomLeft.y - spawnPadding;
+                spawnPos.x = Random.Range(bottomLeft.x, topRight.x);
+                break;
+        }
 
-		switch(side)
-		{
-			case 0:
-				spawnPos.x = bottomLeft.x - spawnPadding;
-				spawnPos.y = Random.Range(bottomLeft.y, topRight.y);
-				break;
-			case 1:
-				spawnPos.x = topRight.x + spawnPadding;
-				spawnPos.y = Random.Range(bottomLeft.y, topRight.y);
-				break;
-			case 2:
-				spawnPos.y = bottomLeft.y - spawnPadding;
-				spawnPos.x = Random.Range(bottomLeft.x, topRight.x);
-				break;
-		}
-
-		return spawnPos;
-	}
+        return spawnPos;
+    }
 }

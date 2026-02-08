@@ -260,7 +260,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8078331703714481501, guid: 0d8eb637b3d03ae43bcd57e4fc2cb651, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.77215
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8078331703714481501, guid: 0d8eb637b3d03ae43bcd57e4fc2cb651, type: 3}
       propertyPath: m_LocalPosition.y
@@ -268,7 +268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8078331703714481501, guid: 0d8eb637b3d03ae43bcd57e4fc2cb651, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.73579
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8078331703714481501, guid: 0d8eb637b3d03ae43bcd57e4fc2cb651, type: 3}
       propertyPath: m_LocalRotation.w
@@ -313,11 +313,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 518251997692756732, guid: c42ff67ca07085b4baee47e45d866e23, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -25.22985
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 518251997692756732, guid: c42ff67ca07085b4baee47e45d866e23, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.64417
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 518251997692756732, guid: c42ff67ca07085b4baee47e45d866e23, type: 3}
       propertyPath: m_LocalPosition.z
@@ -350,10 +350,6 @@ PrefabInstance:
     - target: {fileID: 518251997692756732, guid: c42ff67ca07085b4baee47e45d866e23, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1912445880256570410, guid: c42ff67ca07085b4baee47e45d866e23, type: 3}
-      propertyPath: <FishSpawner>k__BackingField
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5735221697148976202, guid: c42ff67ca07085b4baee47e45d866e23, type: 3}
       propertyPath: m_Name
@@ -451,7 +447,7 @@ Transform:
   m_GameObject: {fileID: 1580740183}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -70.2}
+  m_LocalPosition: {x: 0, y: 1, z: -25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
