@@ -17,11 +17,17 @@ public class MainMenuState : UIState
 
 	public void OnPlayPressed()
 	{
+		EnterFullScreen();
+
+		PlayButtonSound();
+
 		SceneManager.LoadScene("Playground");
 	}
 
 	public void OnSettingsPressed()
 	{
+		PlayButtonSound();
+
 		SettingsState settings = (FindFirstObjectByType<SettingsState>(FindObjectsInactive.Include));
 
 		UIManager.instance.UI_StateMachine.Push(settings);
@@ -29,6 +35,8 @@ public class MainMenuState : UIState
 
 	public void OnCreditsPressed()
 	{
+		PlayButtonSound();
+
 		CreditsState credits = (FindFirstObjectByType<CreditsState>(FindObjectsInactive.Include));
 
 		UIManager.instance.UI_StateMachine.Push(credits);
@@ -36,6 +44,15 @@ public class MainMenuState : UIState
 
 	public void OnExitPressed()
 	{
+		PlayButtonSound();
+
 		Application.Quit();
+	}
+
+	public void EnterFullScreen()
+	{
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Screen.fullScreen = true;
+#endif
 	}
 }

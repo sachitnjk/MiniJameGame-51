@@ -39,7 +39,8 @@ public class PlayerManager : MonoBehaviour
     void HandleLeftClick(InputAction.CallbackContext ctx)
     {
         totalLeftClicks++;
-
+        SoundManager.instance?.PlayClickSFX();
+        
         // Process click through GameManager's spawn system
         gameManager.ProcessClick();
 
@@ -48,6 +49,8 @@ public class PlayerManager : MonoBehaviour
 
     void HandleRightClick(InputAction.CallbackContext ctx)
     {
+        //Sound for upgrade purchase
+
         totalRightClicks++;
 
         // Toggle upgrade menu

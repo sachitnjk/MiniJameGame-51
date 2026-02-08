@@ -67,7 +67,8 @@ public class FishBase : MonoBehaviour
 
     private void DespawnCurrentFish()
     {
-        // TODO: trigger VFX
+        //trigger vfx;
+		SoundManager.instance?.PlayFishDeathSFX();
         Destroy(this.gameObject);
     }
 }
